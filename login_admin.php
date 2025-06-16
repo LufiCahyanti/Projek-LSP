@@ -1,5 +1,5 @@
 <?php
-session_start(); // Mulai session
+session_start();
 $error = "";
 $email_cookie = "";
 
@@ -23,16 +23,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
-        // Simpan email di session
         $_SESSION['email'] = $email;
 
         if ($remember) {
             setcookie("remember_email", $email, time() + (30 * 24 * 60 * 60)); // 30 hari
         } else {
-            setcookie("remember_email", "", time() - 3600); // Hapus cookie
+            setcookie("remember_email", "", time() - 3600);
         }
 
-        header("Location: menu.php"); // Redirect ke halaman menu
+        header("Location: menu-admin.php");
         exit();
     } else {
         $error = "Email atau password salah.";
@@ -51,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #e4eef2;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -61,24 +60,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     .login-container {
       background: white;
-      padding: 30px;
+      padding: 30px 40px;
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       width: 420px;
+      padding-left: 20px;
+    
     }
 
     h1 {
       text-align: center;
-      color:rgb(18, 73, 133);
+      color: rgb(18, 73, 133);
       margin-bottom: 25px;
     }
 
-    table {
-      width: 100%;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
     }
 
-    table td {
-      padding: 10px 0;
+    label {
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+      text-align: left;
+      width: 100%;
     }
 
     input[type="text"],
@@ -99,6 +106,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .remember-me-container {
       margin-top: 10px;
       font-size: 14px;
+      display: flex;
+      align-items: center;
     }
 
     .remember-me-container input {
@@ -109,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       width: 100%;
       margin-top: 20px;
       padding: 12px;
-      background-color:rgb(0, 119, 247);
+      background-color: rgb(0, 119, 247);
       color: white;
       border: none;
       border-radius: 6px;
@@ -133,27 +142,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="login-container">
     <h1>Login Admin</h1>
     <form method="POST" action="">
-      <table>
-        <tr>
-          <td>Email</td>
-        </tr>
-        <tr>
-          <td><input type="text" name="email" value="<?= htmlspecialchars($email_cookie) ?>" required></td>
-        </tr>
-        <tr>
-          <td>Password</td>
-        </tr>
-        <tr>
-          <td><input type="password" name="password" required></td>
-        </tr>
-        <tr>
-          <td class="remember-me-container">
-            <label>
-              <input type="checkbox" name="remember" <?= $email_cookie ? 'checked' : '' ?>> Remember Me
-            </label>
-          </td>
-        </tr>
-      </table>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" value="<?= htmlspecialchars($email_cookie) ?>" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+      </div>
+      <div class="remember-me-container">
+        <input type="checkbox" name="remember" id="remember" <?= $email_cookie ? 'checked' : '' ?>>
+        <label for="remember">Remember Me</label>
+      </div>
       <button type="submit">Sign In</button>
       <div class="pesan-error"><?= htmlspecialchars($error) ?></div>
     </form>
